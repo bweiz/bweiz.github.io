@@ -10,7 +10,7 @@ I build practical hardware + software systems end-to-end — from sensors and fi
 
 **Links:**  
 - GitHub: https://github.com/bweiz  
-- LinkedIn: [LinkedIn](www.linkedin.com/in/benton-weizenegger-0246b0175)  
+- LinkedIn: [LinkedIn](https://www.linkedin.com/in/benton-weizenegger-0246b0175)  
 - Resume (PDF): [Resume](/assets/Benton_Weizenegger_Resume.pdf)  
 
 ---
