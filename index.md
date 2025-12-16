@@ -8,10 +8,11 @@ Computer Engineering • Embedded Systems • FPGA • Video/Imaging
 
 I build practical hardware + software systems end-to-end — from sensors and firmware to Linux drivers, video pipelines, and documentation.
 
-**Links:**  
-- GitHub: https://github.com/bweiz  
-- LinkedIn: [LinkedIn](https://www.linkedin.com/in/benton-weizenegger-0246b0175)  
-- Resume (PDF): [Resume](/assets/Benton_Weizenegger_Resume.pdf)  
+**Links**
+- [GitHub](https://github.com/bweiz)
+- [LinkedIn](https://www.linkedin.com/in/benton-weizenegger-0246b0175/)
+- [Resume (PDF)](/assets/Benton_Weizenegger_Resume.pdf)
+- [Email](mailto:ben.weizenegger@gmail.com)
 
 ---
 
@@ -23,8 +24,8 @@ A multi-camera dashcam system focused on reliable recording + optional live stre
 - Motion detection as a trigger/keep-recording mechanism
 - Designed for real-world constraints (latency/bitrate/power)
 
-Repo: https://github.com/bweiz/Security-Dash-Camera  
-Docs: /projects.md#security-dashcam
+- [Repo](https://github.com/bweiz/Security-Dash-Camera)
+- [Docs](/projects.md#security-dashcam)
 
 ---
 
@@ -34,8 +35,8 @@ Hardware/software co-design projects: custom RTL blocks, memory-mapped control, 
 - Linux-side control (sysfs/misc device patterns, scripts/tools)
 - Emphasis on testability + clear documentation
 
-Repo: https://github.com/bweiz/FPGAS_Classwork  
-Docs: /projects.md#fpga--embedded-linux
+- [Repo](https://github.com/bweiz/FPGAS_Classwork)
+- [Docs](/projects.md#fpga--embedded-linux)
 
 ---
 
@@ -44,7 +45,7 @@ Microcontroller project combining inputs (keypad/encoder/pot) with real-time pri
 - User input → compute → display/LED feedback loop
 - Emphasis on UI flow, reliability, and embedded constraints
 
-Docs: /projects.md#msp430-options-visualizer
+- [Docs](/projects.md#msp430-options-visualizer)
 
 ---
 
@@ -56,6 +57,6 @@ Docs: /projects.md#msp430-options-visualizer
 ---
 
 ## Contact
-Email: ben.weizenegger@gmail.com  
-Location: Bozeman, MT (open to relocation)
+- [ben.weizenegger@gmail.com](mailto:ben.weizenegger@gmail.com)
+- Bozeman, MT (open to relocation)
 
