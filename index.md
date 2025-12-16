@@ -25,7 +25,7 @@ A multi-camera dashcam system focused on reliable recording + optional live stre
 - Designed for real-world constraints (latency/bitrate/power)
 
 - [Repo](https://github.com/bweiz/Security-Dash-Camera)
-- [Docs](/projects.md#security-dashcam)
+- [Docs](/projects#security-dashcam)
 
 ---
 
@@ -36,7 +36,7 @@ Hardware/software co-design projects: custom RTL blocks, memory-mapped control, 
 - Emphasis on testability + clear documentation
 
 - [Repo](https://github.com/bweiz/FPGAS_Classwork)
-- [Docs](/projects.md#fpga--embedded-linux)
+- [Docs](/projects#fpga--embedded-linux)
 
 ---
 
@@ -45,7 +45,8 @@ Microcontroller project combining inputs (keypad/encoder/pot) with real-time pri
 - User input → compute → display/LED feedback loop
 - Emphasis on UI flow, reliability, and embedded constraints
 
-- [Docs](/projects.md#msp430-options-visualizer)
+- [Repo](https://github.com/bweiz/msp430-black-scholes-visualizer)
+- [Docs](/projects#msp430-options-visualizer)
 
 ---
 
