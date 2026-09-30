@@ -8,25 +8,13 @@ Computer Engineer | Embedded Systems | FPGA/RTL | Physical Systems
 
 I like work where software eventually has to make something real happen.
 
-My path has gone from asphalt crews and framing houses, to computer engineering, embedded hardware and FPGA work, and now production software at a fast-moving AI startup. The common thread is learning unfamiliar systems quickly, getting close to how they actually behave, and making them work.
+My path has gone from asphalt crews and framing houses to computer engineering, embedded hardware, FPGA work, and production systems. The common thread is learning unfamiliar systems quickly, getting close to how they actually behave, and making them work.
 
 **Links**
 - [GitHub](https://github.com/bweiz)
 - [LinkedIn](https://www.linkedin.com/in/benton-weizenegger-0246b0175/)
 - [Projects](/projects/)
 - [Email](mailto:ben.weizenegger@gmail.com)
-
----
-
-## Current Work
-
-### MindPartner - Software Engineer / AI Developer
-
-I work across a production software stack where problems often start as logs, user behavior, or a system that is not behaving the way we expect.
-
-- Contributed across Android launch work, authentication, billing and subscription flows, deep links, Customer.io messaging and push integration, wearable/health data integrations, and production reliability fixes.
-- Most recently, I have been helping test a new approach to calling AI models with the goal of reducing model cost while routing different requests to the models that make the most sense for them.
-- I regularly move from observed behavior to root cause, implementation, testing, and deployment, often in parts of the system I have not worked in before.
 
 ---
 
