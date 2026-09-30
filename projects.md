@@ -6,110 +6,166 @@ permalink: /projects/
 
 # Projects
 
-A curated set of my most relevant engineering work. For each project I include the goal, constraints, architecture, what I built, and links to code + documentation.
+These are the projects that best show how I work across hardware and software boundaries. I care less about staying inside one layer than understanding enough of the whole system to make its behavior explainable, testable, and useful.
 
 ## Table of Contents
+- [STM32 + FPGA Event Timing](#stm32-fpga-event-timing)
 - [Security Dashcam](#security-dashcam)
 - [FPGA + Embedded Linux](#fpga-embedded-linux)
-- [MSP430 Options Deviation Visualizer](#msp430-options-visualizer)
-- [More Work](#more-work)
+- [Ibex RISC-V Validation](#ibex-risc-v-validation)
+- [ESP32 Edge Vision](#esp32-edge-vision)
+- [MSP430 Options Visualizer](#msp430-options-visualizer)
+
+---
+
+## STM32 + FPGA Event Timing
+<a id="stm32-fpga-event-timing"></a>
+
+**Focus:** bare-metal firmware, interrupts, MCU/FPGA integration, clock-domain crossing, event timing, verification  
+**Tech:** STM32H723ZG, DE10-Nano, C, CMSIS, OpenOCD, GDB, SystemVerilog  
+**Repo:** [STM32_Vision](https://github.com/bweiz/STM32_Vision)
+
+### Goal
+
+Build an event path where an STM32 generates a hardware event and the FPGA captures that event with a timestamp, creating a foundation for deterministic timing and later sensor/vision integration.
+
+### STM32 side
+
+- Brought up an STM32H723 from bare metal using an ARM GCC toolchain, custom startup code, linker script, CMSIS headers, OpenOCD, and GDB.
+- Configured GPIO directly through RCC and GPIO registers.
+- Configured TIM2 and the NVIC for interrupt-driven timing behavior.
+- Used hardware behavior and debugger state to validate bring-up rather than relying only on successful compilation.
+
+### FPGA side
+
+- Synchronized the asynchronous event input into the FPGA clock domain.
+- Captured events against a 64-bit running timestamp/counter.
+- Buffered captured timestamps in a FIFO.
+- Built a SystemVerilog testbench that exercises normal operation and edge cases around event timing, reset, reads, and FIFO behavior.
+
+### What this project is teaching me
+
+The interesting part is the boundary between systems. A pulse that is trivial inside one clock domain becomes a timing and synchronization problem once it crosses into another device. That forces the firmware, digital design, timing assumptions, and verification strategy to agree.
 
 ---
 
 ## Security Dashcam
 <a id="security-dashcam"></a>
 
-**Focus:** multi-camera video pipeline, motion-triggered behavior, real-world embedded constraints  
-**Tech:** Raspberry Pi 5, MIPI-CSI + USB cameras, Python, Linux tooling, encoding/streaming pipeline  
+**Focus:** multi-camera video, embedded vision, motion-triggered behavior, resource tradeoffs  
+**Tech:** Raspberry Pi 5, 2x MIPI CSI cameras, USB UVC camera, Python, OpenCV, Picamera2/libcamera, V4L2, FFmpeg/GStreamer  
 **Repo:** [Security-Dash-Camera](https://github.com/bweiz/Security-Dash-Camera)
 
 ### Goal
-Build a practical, vehicle-compatible dashcam system that can:
-- record locally at high quality,
-- optionally stream to a mobile app when requested,
-- handle motion-triggered recording modes reliably.
 
-### Constraints / Requirements (design drivers)
-- Multi-camera input (front MIPI, front USB, rear MIPI)
-- End-to-end pipeline thinking: capture → process → encode → store/stream
-- Latency/bitrate targets for live streaming (project-driven)
-- Power-aware “parked mode” concept with motion-triggered escalation
+Build the processing subsystem for a practical multi-camera dashcam that could move between lower-compute monitoring and active processing/streaming modes.
 
 ### What I built / owned
-- Designed a multi-stage processing flow:
-  - lightweight motion check (pre-filter) → verify → full processing mode
-- Built prototype scripts for:
-  - motion detection logic (frame differencing style)
-  - recording-on-motion behavior
-  - health/performance logging (system telemetry)
-- Implemented per-camera recording:
-  - each camera saved as a separate video file with camera-identified naming
-- Planned/implemented timestamp overlay support for stored footage
 
-### Architecture (high level)
-- **Parked Mode:** lowest power approach, then motion verification
-- **Full Processing Mode:** continuous recording from 3 cameras + periodic motion checks to decide whether to continue recording
-- **Two outputs:** high-quality stream for storage + lower-quality stream for live app streaming (on demand)
+- Integrated two MIPI cameras and one USB camera on a Raspberry Pi 5.
+- Added GPIO-controlled IR lighting for low-light operation.
+- Implemented a lightweight motion path using reduced-resolution luminance frames, Gaussian filtering, thresholding, and connected-component analysis.
+- Tuned separate day/night motion thresholds around actual camera behavior.
+- Built a 720p/10 fps streaming path while balancing camera bandwidth, processing load, and system responsiveness.
 
 ### What I learned
-- Designing reliable state transitions matters as much as code (mode switching, timeouts, failure handling)
-- Video systems are tradeoffs: CPU/GPU load, bitrate, latency, quality, robustness
+
+Camera systems are a good example of why end-to-end understanding matters. Image quality, bus bandwidth, processing load, latency, lighting, and state transitions all affect the behavior the user sees.
 
 ---
 
 ## FPGA + Embedded Linux
 <a id="fpga-embedded-linux"></a>
 
-**Focus:** hardware/software co-design, RTL blocks, Linux interfacing, memory-mapped control  
-**Tech:** DE10-Nano (SoC FPGA), RTL (VHDL/Verilog), Avalon-MM mapping, Linux device tree + drivers, C/Python tooling  
+**Focus:** RTL, memory-mapped peripherals, Linux drivers, hardware/software integration  
+**Tech:** DE10-Nano SoC FPGA, VHDL/RTL, Platform Designer, Avalon-MM style mapping, C, Linux kernel interfaces  
 **Repo:** [FPGAS_Classwork](https://github.com/bweiz/FPGAS_Classwork)
 
 ### Goal
-Build FPGA-based peripherals and control paths that feel “real”:
-- custom RTL modules accessible from Linux,
-- clean register maps,
-- drivers/user-space interfaces proving end-to-end integration.
+
+Build a custom FPGA peripheral and make it usable from Linux, not just demonstrate the RTL in isolation.
 
 ### What I built / owned
-- RTL blocks (PWM-style control, register interfaces)
-- Memory-mapped control (Avalon-MM style register reads/writes)
-- Linux integration:
-  - device-tree nodes (binding)
-  - platform-driver patterns (sysfs / misc device style)
-  - user-space test utilities + scripts
 
-### Why this matters (what it demonstrates)
-- I can design the hardware **and** make it usable from software
-- I understand integration: address maps, driver binding, verification, documentation
+- Built an RGB PWM/control peripheral in FPGA fabric.
+- Exposed control through memory-mapped registers in the SoC address space.
+- Integrated the peripheral through Platform Designer.
+- Wrote Linux platform/misc-driver code and exposed control through sysfs.
+- Used memory-mapped writes and hardware observation to validate the entire path from user space to physical output.
+
+### Why it matters
+
+This project forced me to debug across several layers at once: RTL, address mapping, Linux device binding, driver code, and actual hardware behavior.
 
 ---
 
-## MSP430 Options Deviation Visualizer
+## Ibex RISC-V Validation
+<a id="ibex-risc-v-validation"></a>
+
+**Focus:** processor execution, binaries, memory layout, simulation, low-level validation  
+**Tech:** Ibex RISC-V, RV32IMC, GCC toolchain, ELF/disassembly, simulation traces
+
+### What I worked through
+
+- Built and simulated an Ibex simple system.
+- Cross-compiled an RV32IMC test program.
+- Inspected the ELF and disassembly to connect C-level intent to machine-level execution.
+- Traced execution from reset through program termination.
+- Worked with RAM and memory-mapped peripheral regions to understand how software interacts with the simulated SoC.
+
+### Why I built it
+
+I wanted a better mental model of what happens after source code is compiled: how instructions are linked into memory, where the processor starts, how peripherals appear in the address space, and how to verify that behavior from traces instead of treating the toolchain as a black box.
+
+---
+
+## ESP32 Edge Vision
+<a id="esp32-edge-vision"></a>
+
+**Focus:** firmware bring-up, I2C, device communication, hardware debugging  
+**Tech:** XIAO ESP32-S3 Sense, ESP-IDF, Grove Vision AI V2, I2C  
+**Repo:** [vision-node-esp32](https://github.com/bweiz/vision-node-esp32)
+
+### Goal
+
+Bring up communication between an ESP32-S3 host and a Grove Vision AI V2 module in layers, starting with proving the physical transport before building higher-level inference behavior.
+
+### Approach
+
+- Structured the project around explicit board configuration, I2C transport, Grove Vision transport, and application metrics.
+- Started at the bus level: wiring, GPIO selection, clock rate, expected device address, and actual ACK/NACK behavior.
+- Kept higher-level inference parsing out of the first milestone so failures could be isolated instead of hidden by a larger framework.
+
+The project is intentionally unfinished in the useful sense: it documents what is verified, what is assumed, and what still needs hardware-level validation.
+
+---
+
+## MSP430 Options Visualizer
 <a id="msp430-options-visualizer"></a>
 
-**Focus:** embedded UI + math + peripherals integration  
-**Tech:** MSP430, keypad/encoder, LCD + LED bar over I2C, C firmware  
+**Focus:** embedded UI, math, peripheral integration  
+**Tech:** MSP430, C, keypad/encoder, LCD, I2C LED bar  
 **Repo:** [msp430-black-scholes-visualizer](https://github.com/bweiz/msp430-black-scholes-visualizer)
 
 ### Goal
-Create a microcontroller-based “pricing deviation” visualizer:
-- user inputs option parameters + market price,
-- firmware computes theoretical price (Black–Scholes based),
-- device displays the deviation visually (LCD + LED bar).
+
+Create a microcontroller-based options pricing deviation visualizer:
+
+- capture user-entered option parameters and market price,
+- compute a Black-Scholes theoretical price,
+- display the resulting deviation through an LCD and LED bar.
 
 ### What I built / owned
-- Input system: keypad + rotary encoder
-- Compute path: parameter capture → Black–Scholes call price → deviation
-- Output/UI: LCD messaging + LED bar mapping (I2C master → I2C slave)
+
+- Keypad and rotary-encoder input flow.
+- Firmware path from parameter capture through pricing calculation.
+- LCD messaging and I2C-controlled LED bar output.
 
 ---
 
 ## More Work
-<a id="more-work"></a>
 
-If you want more depth beyond the featured projects:
+My GitHub also includes smaller experiments in embedded C, FPGA work, market systems, and systems-level learning:
+
 - [GitHub Profile](https://github.com/bweiz)
-- [Security-Dash-Camera](https://github.com/bweiz/Security-Dash-Camera)
-- [FPGAS_Classwork](https://github.com/bweiz/FPGAS_Classwork)
-- [msp430-black-scholes-visualizer](https://github.com/bweiz/msp430-black-scholes-visualizer)
-
+- [embedded-C-foundations](https://github.com/bweiz/embedded-C-foundations)
